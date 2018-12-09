@@ -83,8 +83,11 @@ public abstract class BeanFactoryUtils {
 		if (!name.startsWith(BeanFactory.FACTORY_BEAN_PREFIX)) {
 			return name;
 		}
+		//computeIfAbesent  如果已存在直接返回  ，否则计算并存入
+		//小知识补充。假设配置了一个 FactoryBean 的名字为 "abc" ，那么获取 FactoryBean 创建的 Bean 时，使用 "abc" ，如果获取 FactoryBean 本身，使用 "$abc" 。另外，&定义在 BeanFactory.FACTORY_BEAN_PREFIX = "&" 上。
 		return transformedBeanNameCache.computeIfAbsent(name, beanName -> {
 			do {
+				//剥离$前缀
 				beanName = beanName.substring(BeanFactory.FACTORY_BEAN_PREFIX.length());
 			}
 			while (beanName.startsWith(BeanFactory.FACTORY_BEAN_PREFIX));

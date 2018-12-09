@@ -300,7 +300,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	 * @param encodedResource the resource descriptor for the XML file,
 	 * allowing to specify an encoding to use for parsing the file
 	 * @return the number of bean definitions found
-	 * @throws BeanDefinitionStoreException in case of loading or parsing errors
+	 * @throws BeanDefinitionStoreException in case of loading or parsing errors  从XML文件中读取BeanDefinition
 	 */
 	public int loadBeanDefinitions(EncodedResource encodedResource) throws BeanDefinitionStoreException {
 		Assert.notNull(encodedResource, "EncodedResource must not be null");
@@ -324,6 +324,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 				if (encodedResource.getEncoding() != null) {
 					inputSource.setEncoding(encodedResource.getEncoding());
 				}
+				//真实读取InputSourece解析并注册Definition的接口
 				return doLoadBeanDefinitions(inputSource, encodedResource.getResource());
 			}
 			finally {
@@ -422,6 +423,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	 * @see DocumentLoader#loadDocument
 	 */
 	protected Document doLoadDocument(InputSource inputSource, Resource resource) throws Exception {
+		//采用默认DocumentLoader加载文档
 		return this.documentLoader.loadDocument(inputSource, getEntityResolver(), this.errorHandler,
                 //得到xml文件的验证格式 xsd还是dtd
 				getValidationModeForResource(resource), isNamespaceAware());
