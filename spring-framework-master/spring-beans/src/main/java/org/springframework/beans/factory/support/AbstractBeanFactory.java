@@ -1429,7 +1429,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		ClassLoader beanClassLoader = getBeanClassLoader();
 		ClassLoader dynamicLoader = beanClassLoader;
 		boolean freshResolve = false;
-
+        //当只是做类校验的时候，用临时类加载器
 		if (!ObjectUtils.isEmpty(typesToMatch)) {
 			// When just doing type checks (i.e. not creating an actual instance yet),
 			// use the specified temporary class loader (e.g. in a weaving scenario).
