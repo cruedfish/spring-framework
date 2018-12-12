@@ -84,6 +84,7 @@ public class SimpleInstantiationStrategy implements InstantiationStrategy {
 					}
 				}
 			}
+			//可以理解为前面的Class.forName只是获得Bean的引用  而 这里是调用构造方法真正初始话对象
 			return BeanUtils.instantiateClass(constructorToUse);
 		}
 		else {

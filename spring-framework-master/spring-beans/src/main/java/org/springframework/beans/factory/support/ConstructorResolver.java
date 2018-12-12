@@ -282,7 +282,7 @@ class ConstructorResolver {
 		}
 
 		Assert.state(argsToUse != null, "Unresolved constructor arguments");
-		//如上是确定构造函数参数和构造方法
+		//如上是确定构造函数参数和构造方法，
 		bw.setBeanInstance(instantiate(beanName, mbd, constructorToUse, argsToUse));
 		return bw;
 	}

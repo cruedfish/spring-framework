@@ -266,6 +266,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		}
 
 		else {
+			//前面是从缓存中取，从这块开始是从缓存中取
 			// Fail if we're already creating this bean instance:
 			// We're assumably within a circular reference.  原型模式不支持循环依赖 抛出异常
 			if (isPrototypeCurrentlyInCreation(beanName)) {
@@ -306,7 +307,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 				final RootBeanDefinition mbd = getMergedLocalBeanDefinition(beanName);
 				// 检查给定的合并的 BeanDefinition
 				checkMergedBeanDefinition(mbd, beanName, args);
-
+                //解析 当前bean的依赖递归先创建依赖的ban
 				// Guarantee initialization of beans that the current bean depends on.
 				String[] dependsOn = mbd.getDependsOn();
 				if (dependsOn != null) {
@@ -328,7 +329,6 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 						}
 					}
 				}
-                 //前面都是从缓存中直接取Bean若是缓存不存在，则从头开始创建
 				// Create bean instance. 单例模式创建
 				if (mbd.isSingleton()) {
 					sharedInstance = getSingleton(beanName, () -> {
