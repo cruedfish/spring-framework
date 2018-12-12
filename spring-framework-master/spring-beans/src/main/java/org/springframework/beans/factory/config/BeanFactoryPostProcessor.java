@@ -53,6 +53,7 @@ public interface BeanFactoryPostProcessor {
 	 * @param beanFactory the bean factory used by the application context
 	 * @throws org.springframework.beans.BeansException in case of errors
 	 */
+	//在bean实例化之前最后一次修改 bean的机会，比如添加一些属性，修改一些信息
 	void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException;
 
 }
