@@ -266,7 +266,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		}
 
 		else {
-			//前面是从缓存中取，从这块开始是从缓存中取
+			//前面是从缓存中取，从这块开始是从新获取
 			// Fail if we're already creating this bean instance:
 			// We're assumably within a circular reference.  原型模式不支持循环依赖 抛出异常
 			if (isPrototypeCurrentlyInCreation(beanName)) {
