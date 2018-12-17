@@ -158,7 +158,11 @@ class TypeConverterDelegate {
 		ConversionFailedException conversionAttemptEx = null;
 
 		// No custom editor but custom ConversionService specified?
+		//如果没有属性编辑器则使用ConversionService来进行转换
 		ConversionService conversionService = this.propertyEditorRegistry.getConversionService();
+//		source ：要转换的源对象，可以为 null 。
+//		sourceType：source 的类型的上下文，如果 source 为 null ，则可以为 null 。
+//		targetType ：source 要转换的类型的上下文。
 		if (editor == null && conversionService != null && newValue != null && typeDescriptor != null) {
 			TypeDescriptor sourceTypeDesc = TypeDescriptor.forObject(newValue);
 			if (conversionService.canConvert(sourceTypeDesc, typeDescriptor)) {

@@ -37,6 +37,13 @@ abstract class ConversionUtils {
 			TypeDescriptor sourceType, TypeDescriptor targetType) {
 
 		try {
+			//真正执行转换的逻辑
+			//Converter：用于 1:1 的 source -> target 类型转换。
+			//ConverterFactory：用于 1:N 的 source -> target 类型转换。
+			//GenericConverter用于 N:N 的 source -> target 类型转换。
+			//ConditionalConverter：有条件的 source -> target 类型转换。
+			//GenericConversionService 实现 ConfigurableConversionService 接口，而 ConfigurableConversionService 接口继承 ConversionService 和 ConverterRegistry。
+			//ConverterRegistry 提供了类型转换器的管理功能，他提供了四个 add 和一个 remove 方法，支持注册/删除相应的类型转换器。
 			return converter.convert(source, sourceType, targetType);
 		}
 		catch (ConversionFailedException ex) {

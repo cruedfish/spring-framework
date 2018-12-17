@@ -122,13 +122,16 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 	 */
 	@Override
 	protected final void refreshBeanFactory() throws BeansException {
+		//如果容器已经存在直接销毁
 		if (hasBeanFactory()) {
 			destroyBeans();
 			closeBeanFactory();
 		}
 		try {
+			//创建BeanFactory容器
 			DefaultListableBeanFactory beanFactory = createBeanFactory();
 			beanFactory.setSerializationId(getId());
+			//    因为Spring IOC容器启动加载时会检查bean定义是否有重复，如果有重复则会根据AbstractRefreshableApplicationContext类中的allowBeanDefinitionOverriding属性值进行判断，如果值为true，则把后加载的bean覆盖前面加载的bean定义
 			customizeBeanFactory(beanFactory);
 			loadBeanDefinitions(beanFactory);
 			synchronized (this.beanFactoryMonitor) {
