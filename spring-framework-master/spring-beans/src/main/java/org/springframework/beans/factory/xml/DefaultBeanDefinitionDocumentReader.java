@@ -178,9 +178,9 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 				if (node instanceof Element) {
 					Element ele = (Element) node;
 					if (delegate.isDefaultNamespace(ele)) {
-						//默认的解析方式
+						//默认的解析方式,解析beans标签内的属性
 						parseDefaultElement(ele, delegate);
-					}
+				}
 					else {
 						delegate.parseCustomElement(ele);
 					}
@@ -188,6 +188,7 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 			}
 		}
 		else {
+			//aop方式解析
 			delegate.parseCustomElement(root);
 		}
 	}

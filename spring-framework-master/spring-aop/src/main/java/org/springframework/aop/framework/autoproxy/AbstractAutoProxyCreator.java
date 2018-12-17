@@ -459,10 +459,16 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 				proxyFactory.setProxyTargetClass(true);
 			}
 			else {
+				// 点进去稍微看一下代码就知道了，主要就两句：
+				// 1. 有接口的，调用一次或多次：proxyFactory.addInterface(ifc);
+				// 2. 没有接口的，调用：proxyFactory.setProxyTargetClass(true);
 				evaluateProxyInterfaces(beanClass, proxyFactory);
 			}
 		}
          //获取可用的advisor
+		// 这个方法会返回匹配了当前 bean 的 advisors 数组
+		// 对于本文的例子，"userServiceImpl" 和 "OrderServiceImpl" 到这边的时候都会返回两个 advisor
+		// 注意：如果 specificInterceptors 中有 advice 和 interceptor，它们也会被包装成 advisor，
 		Advisor[] advisors = buildAdvisors(beanName, specificInterceptors);
 		proxyFactory.addAdvisors(advisors);
 		proxyFactory.setTargetSource(targetSource);
