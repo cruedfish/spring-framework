@@ -346,8 +346,8 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 			return bean;
 		}
 
-		// Create proxy if we have advice.
-		//如果存在增加处理需要创建代理，判断是否需要生成代理
+		// 找到对应的切点增加器，判断是否满足要求
+		//如果存在增加处理需要创建代理，判断是否需要生成代
 		Object[] specificInterceptors = getAdvicesAndAdvisorsForBean(bean.getClass(), beanName, null);
 		if (specificInterceptors != DO_NOT_PROXY) {
 			this.advisedBeans.put(cacheKey, Boolean.TRUE);
