@@ -53,19 +53,28 @@ public class DefaultAdvisorChainFactory implements AdvisorChainFactory, Serializ
 
 		// This is somewhat tricky... We have to process introductions first,
 		// but we need to preserve order in the ultimate list.
+
+		//通过单例方式实例一个DefaultAdvisorAdapterRegistry,
 		AdvisorAdapterRegistry registry = GlobalAdvisorAdapterRegistry.getInstance();
 		Advisor[] advisors = config.getAdvisors();
+
+		//使用一个List来装要获取的拦截器,最将返回这个
 		List<Object> interceptorList = new ArrayList<>(advisors.length);
+
 		Class<?> actualClass = (targetClass != null ? targetClass : method.getDeclaringClass());
 		Boolean hasIntroductions = null;
 
 		for (Advisor advisor : advisors) {
+
+			//如果是PointcutAdvisor类型
 			if (advisor instanceof PointcutAdvisor) {
 				// Add it conditionally.
 				PointcutAdvisor pointcutAdvisor = (PointcutAdvisor) advisor;
 				if (config.isPreFiltered() || pointcutAdvisor.getPointcut().getClassFilter().matches(actualClass)) {
+
 					MethodMatcher mm = pointcutAdvisor.getPointcut().getMethodMatcher();
 					boolean match;
+					//已预过滤过的或者这个切点适用于给定的接口或目标类
 					if (mm instanceof IntroductionAwareMethodMatcher) {
 						if (hasIntroductions == null) {
 							hasIntroductions = hasMatchingIntroductions(advisors, actualClass);
@@ -73,18 +82,23 @@ public class DefaultAdvisorChainFactory implements AdvisorChainFactory, Serializ
 						match = ((IntroductionAwareMethodMatcher) mm).matches(method, actualClass, hasIntroductions);
 					}
 					else {
+						//如果方法匹配到了目标类的方法
 						match = mm.matches(method, actualClass);
 					}
 					if (match) {
+
+						//从registry获取MethodInterceptor拦截器
 						MethodInterceptor[] interceptors = registry.getInterceptors(advisor);
 						if (mm.isRuntime()) {
 							// Creating a new object instance in the getInterceptors() method
 							// isn't a problem as we normally cache created chains.
 							for (MethodInterceptor interceptor : interceptors) {
+								//如果是动态MethodMatcher,就会对每一个interceptor创建一个新的InterceptorAndDynamicMethodMatcher拦截器,并加入到返回List.
 								interceptorList.add(new InterceptorAndDynamicMethodMatcher(interceptor, mm));
 							}
 						}
 						else {
+							//不是动态的MethodMatcher,将所有的拦截器加入到返回List
 							interceptorList.addAll(Arrays.asList(interceptors));
 						}
 					}
