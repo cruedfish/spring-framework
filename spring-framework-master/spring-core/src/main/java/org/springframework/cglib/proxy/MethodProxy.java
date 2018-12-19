@@ -16,10 +16,10 @@
 
 package org.springframework.cglib.proxy;
 
+import org.springframework.cglib.core.AbstractClassGenerator;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-
-import org.springframework.cglib.core.AbstractClassGenerator;
 import org.springframework.cglib.core.CodeGenerationException;
 import org.springframework.cglib.core.GeneratorStrategy;
 import org.springframework.cglib.core.NamingPolicy;
