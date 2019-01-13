@@ -596,9 +596,12 @@ public class DispatcherServlet extends FramewokServlet {
 	 * we default to BeanNameUrlHandlerMapping.
 	 */
 	//初始化HandlerMapping
-	private void initHandlerMappings(ApplicationContext context) {
-		this.handlerMappings = null;
 
+	//只是把所有的handlermapping bean放到这个集合里面来
+	private void initHandlerMappings(ApplicationContext context) {
+		//在容器初始化的时候
+		this.handlerMappings = null;
+         //把所有HandleMapping类型的类加载到这个list集合中
 		if (this.detectAllHandlerMappings) {
 			// Find all HandlerMappings in the ApplicationContext, including ancestor contexts.
 			Map<String, HandlerMapping> matchingBeans =
@@ -1017,6 +1020,7 @@ public class DispatcherServlet extends FramewokServlet {
 
 			try {
 				processedRequest = checkMultipart(request);
+				//检查是否是上传请求。如果是，则封装成 MultipartHttpServletRequest 对象
 				multipartRequestParsed = (processedRequest != request);
 
 				// Determine handler for the current request.
@@ -1041,12 +1045,14 @@ public class DispatcherServlet extends FramewokServlet {
 					}
 				}
                //前置拦截器
+                //拦截器的preHandle方法调用
 				if (!mappedHandler.applyPreHandle(processedRequest, response)) {
 					return;
 				}
 
 				// Actually invoke the handler.
 				//真正调用hanler出的方法
+				//真正的调用handle方法去出来请求
 				mv = ha.handle(processedRequest, response, mappedHandler.getHandler());
 
 				if (asyncManager.isConcurrentHandlingStarted()) {
@@ -1239,7 +1245,9 @@ public class DispatcherServlet extends FramewokServlet {
 	 */
 	@Nullable
 	protected HandlerExecutionChain getHandler(HttpServletRequest request) throws Exception {
+		//在initHandlerMapping方法中会把所有的Mapping加入到这个list集合中
 		if (this.handlerMappings != null) {
+			//轮询所有的HandlerMapping 看是否有 handler匹配 ，如果有直接返回
 			for (HandlerMapping mapping : this.handlerMappings) {
 				HandlerExecutionChain handler = mapping.getHandler(request);
 				if (handler != null) {

@@ -150,6 +150,7 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 	/**
 	 * Detects handler methods at initialization.
 	 */
+	//继承了IntailizationBean 会在bean容器初始化的时候调用 initHandlerMethods 方法
 	@Override
 	public void afterPropertiesSet() {
 
@@ -170,6 +171,7 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 	 * @see #handlerMethodsInitialized(Map)
 	 */
 	protected void initHandlerMethods() {
+		//得到spring中所有的beanName
 		String[] beanNames = obtainApplicationContext().getBeanNamesForType(Object.class);
 
 		for (String beanName : beanNames) {
@@ -184,7 +186,9 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 						logger.trace("Could not resolve type for bean '" + beanName + "'", ex);
 					}
 				}
+				//如果 含有@Controller 或含有RequestMapping注解
 				if (beanType != null && isHandler(beanType)) {
+					//扫描这个bean中所有的方法 和暴露路径注册到
 					detectHandlerMethods(beanName);
 				}
 			}
