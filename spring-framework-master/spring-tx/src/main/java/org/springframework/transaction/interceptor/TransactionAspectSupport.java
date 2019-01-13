@@ -269,7 +269,7 @@ public abstract class TransactionAspectSupport implements BeanFactoryAware, Init
 	 * methods on this class. Able to handle {@link CallbackPreferringPlatformTransactionManager}
 	 * as well as regular {@link PlatformTransactionManager} implementations.
 	 * @param method the Method being invoked
-	 * @param targetClass the target class that we're invoking the method on
+	 * @param targetClass the target class that we're invoking the method on  注解目标类和方法的包装类
 	 * @param invocation the callback to use for proceeding with the target invocation
 	 * @return the return value of the method, if any
 	 * @throws Throwable propagated from the target invocation
@@ -282,7 +282,7 @@ public abstract class TransactionAspectSupport implements BeanFactoryAware, Init
 		//获取对应的事务属性
 		TransactionAttributeSource tas = getTransactionAttributeSource();
 		final TransactionAttribute txAttr = (tas != null ? tas.getTransactionAttribute(method, targetClass) : null);
-		//获取BeanFactory对应的事务处理器
+		//获取BeanFactory对应的事务处理器  //PlatformTransactionManager默认事务处理器
 		final PlatformTransactionManager tm = determineTransactionManager(txAttr);
 		//构造方法的唯一id如service.impl.duck.save
 		final String joinpointIdentification = methodIdentification(method, targetClass, txAttr);
@@ -386,7 +386,7 @@ public abstract class TransactionAspectSupport implements BeanFactoryAware, Init
 		if (txAttr == null || this.beanFactory == null) {
 			return getTransactionManager();
 		}
-
+//PROPAGATION_REQUIRED -- 支持当前事务，如果当前没有事务，就新建一个事务。这是最常见的选择
 		String qualifier = txAttr.getQualifier();
 		if (StringUtils.hasText(qualifier)) {
 			return determineQualifiedTransactionManager(this.beanFactory, qualifier);
