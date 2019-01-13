@@ -132,7 +132,8 @@ public abstract class ApplicationObjectSupport implements ApplicationContextAwar
 	 * @throws BeansException if thrown by ApplicationContext methods
 	 * @see #setApplicationContext
 	 */
-	protected void initApplicationContext() throws BeansException {
+	protected void
+	initApplicationContext() throws BeansException {
 	}
 
 

@@ -94,30 +94,33 @@ public abstract class AbstractNamedValueMethodArgumentResolver implements Handle
 	@Nullable
 	public final Object resolveArgument(MethodParameter parameter, @Nullable ModelAndViewContainer mavContainer,
 			NativeWebRequest webRequest, @Nullable WebDataBinderFactory binderFactory) throws Exception {
-
+//// <1> 获得方法参数对应的 NamedValueInfo 对象。即为Name required defaultvalue
 		NamedValueInfo namedValueInfo = getNamedValueInfo(parameter);
 		MethodParameter nestedParameter = parameter.nestedIfOptional();
-
+//	 如果 name 是占位符，则进行解析成对应的值
 		Object resolvedName = resolveStringValue(namedValueInfo.name);
 		if (resolvedName == null) {
 			throw new IllegalArgumentException(
 					"Specified name must not resolve to null: [" + namedValueInfo.name + "]");
 		}
-
+// <4> 从request解析 name 对应的值
 		Object arg = resolveName(resolvedName.toString(), nestedParameter, webRequest);
+		//如果arg不存在则使用默认值
 		if (arg == null) {
 			if (namedValueInfo.defaultValue != null) {
 				arg = resolveStringValue(namedValueInfo.defaultValue);
 			}
-			else if (namedValueInfo.required && !nestedParameter.isOptional()) {
+			else if (namedValueInfo.required && !nestedParameter.isOptional()) {bi't'
+				//如果是必填处理参数缺失的情况
 				handleMissingValue(namedValueInfo.name, nestedParameter, webRequest);
 			}
+			//处理空值的情况
 			arg = handleNullValue(namedValueInfo.name, arg, nestedParameter.getNestedParameterType());
 		}
 		else if ("".equals(arg) && namedValueInfo.defaultValue != null) {
 			arg = resolveStringValue(namedValueInfo.defaultValue);
 		}
-
+// <7> 执行值的类型转换
 		if (binderFactory != null) {
 			WebDataBinder binder = binderFactory.createBinder(webRequest, null, namedValueInfo.name);
 			try {

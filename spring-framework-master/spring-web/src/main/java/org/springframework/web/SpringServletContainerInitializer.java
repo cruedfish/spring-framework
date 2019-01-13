@@ -109,6 +109,7 @@ import org.springframework.util.ReflectionUtils;
  * @see WebApplicationInitializer
  */
 @HandlesTypes(WebApplicationInitializer.class)
+//基于spring3.0自动实现servlet和filter的装配
 public class SpringServletContainerInitializer implements ServletContainerInitializer {
 
 	/**
