@@ -553,6 +553,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		synchronized (mbd.postProcessingLock) {
 			if (!mbd.postProcessed) {
 				try {
+					//AutowiredAnnotationBeanPostProcessor类的postProcessMergedBeanDefinition方法，也就是开头介绍的在这个方法中完成了对注入元素注解的预解析。
 					applyMergedBeanDefinitionPostProcessors(mbd, beanType, beanName);
 				}
 				catch (Throwable ex) {

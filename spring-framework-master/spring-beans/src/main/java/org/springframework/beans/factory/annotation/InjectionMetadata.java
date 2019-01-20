@@ -79,6 +79,8 @@ public class InjectionMetadata {
 	}
 
 	public void inject(Object target, @Nullable String beanName, @Nullable PropertyValues pvs) throws Throwable {
+		//，AutowiredFieldElement用于对标注在属性上的注入，AutowiredMethodElement用于对标注在方法上的注入。两种方式的注入过程都差不多，
+		// 根据需要注入的元素的描述信息，按类型或名称查找需要的依赖值，如果依赖没有实例化先实例化依赖，然后使用反射进行赋值。
 		Collection<InjectedElement> checkedElements = this.checkedElements;
 		Collection<InjectedElement> elementsToIterate =
 				(checkedElements != null ? checkedElements : this.injectedElements);

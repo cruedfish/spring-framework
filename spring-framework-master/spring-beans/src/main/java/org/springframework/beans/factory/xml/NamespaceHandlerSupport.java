@@ -70,7 +70,13 @@ public abstract class NamespaceHandlerSupport implements NamespaceHandler {
 	@Override
 	@Nullable
 	public BeanDefinition parse(Element element, ParserContext parserContext) {
+		//获取对应的parser
+		//config-->ConfigBeanDefinitionParser
+		//aspectj-autoproxy-->AspectJAutoProxyBeanDefinitionParser
+		//scoped-proxy-->ScopedProxyBeanDefinitionDecorator
+		//spring-configured-->SpringConfiguredBeanDefinitionParser
 		BeanDefinitionParser parser = findParserForElement(element, parserContext);
+
 		return (parser != null ? parser.parse(element, parserContext) : null);
 	}
 

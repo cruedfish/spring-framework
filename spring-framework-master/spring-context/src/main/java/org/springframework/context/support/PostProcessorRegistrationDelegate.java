@@ -51,7 +51,8 @@ final class PostProcessorRegistrationDelegate {
 	private PostProcessorRegistrationDelegate() {
 	}
 
-
+//查找BeanFactoryPostProcessor  在spring容器中执行postProcessBeanFactory 或者是  执行 BeanDefinitionRegistryPostProcessor的 postProcessBeanDefinitionRegistry
+	//最先执行 ConfigurationClassPostProcessor 的 postProcessBeanDefinitionRegistry
 	public static void invokeBeanFactoryPostProcessors(
 			ConfigurableListableBeanFactory beanFactory, List<BeanFactoryPostProcessor> beanFactoryPostProcessors) {
 
@@ -60,8 +61,15 @@ final class PostProcessorRegistrationDelegate {
 
 		if (beanFactory instanceof BeanDefinitionRegistry) {
 			BeanDefinitionRegistry registry = (BeanDefinitionRegistry) beanFactory;
+			// 用于记录常规 BeanFactoryPostProcessor
 			List<BeanFactoryPostProcessor> regularPostProcessors = new ArrayList<>();
+			// 用于记录 BeanDefinitionRegistryPostProcessor
 			List<BeanDefinitionRegistryPostProcessor> registryProcessors = new ArrayList<>();
+			// 遍历所有参数传递进来的 BeanFactoryPostProcessor(它们并没有作为bean注册在容器中)
+			// 将所有参数传入的 BeanFactoryPostProcessor 分成两组 :
+			// BeanDefinitionRegistryPostProcessor 和常规 BeanFactoryPostProcessor
+			// 1.如果是BeanDefinitionRegistryPostProcessor，现在执行postProcessBeanDefinitionRegistry()，
+			// 2.否则记录为一个常规 BeanFactoryPostProcessor，现在不执行处理
 
 			for (BeanFactoryPostProcessor postProcessor : beanFactoryPostProcessors) {
 				if (postProcessor instanceof BeanDefinitionRegistryPostProcessor) {
@@ -74,7 +82,7 @@ final class PostProcessorRegistrationDelegate {
 					regularPostProcessors.add(postProcessor);
 				}
 			}
-
+			// currentRegistryProcessors 用于记录当前正要被执行的BeanDefinitionRegistryPostProcessor
 			// Do not initialize FactoryBeans here: We need to leave all regular beans
 			// uninitialized to let the bean factory post-processors apply to them!
 			// Separate between BeanDefinitionRegistryPostProcessors that implement
@@ -92,8 +100,13 @@ final class PostProcessorRegistrationDelegate {
 			}
 			sortPostProcessors(currentRegistryProcessors, beanFactory);
 			registryProcessors.addAll(currentRegistryProcessors);
+			// 对bean形式存在的 BeanDefinitionRegistryPostProcessor 执行其对
+			// BeanDefinitionRegistry的postProcessBeanDefinitionRegistry()
 			invokeBeanDefinitionRegistryPostProcessors(currentRegistryProcessors, registry);
 			currentRegistryProcessors.clear();
+
+			// Next, invoke the BeanDefinitionRegistryPostProcessors that implement Ordered.
+			// 2. 对 Bean形式 BeanDefinitionRegistryPostProcessor + Ordered的调用
 
 			// Next, invoke the BeanDefinitionRegistryPostProcessors that implement Ordered.
 			postProcessorNames = beanFactory.getBeanNamesForType(BeanDefinitionRegistryPostProcessor.class, true, false);
