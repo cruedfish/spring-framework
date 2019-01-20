@@ -130,7 +130,7 @@ public class InvocableHandlerMethod extends HandlerMethod {
 	@Nullable
 	public Object invokeForRequest(NativeWebRequest request, @Nullable ModelAndViewContainer mavContainer,
 			Object... providedArgs) throws Exception {
-
+// <y> 解析方法参数
 		Object[] args = getMethodArgumentValues(request, mavContainer, providedArgs);
 		if (logger.isTraceEnabled()) {
 			logger.trace("Arguments: " + Arrays.toString(args));
@@ -150,19 +150,25 @@ public class InvocableHandlerMethod extends HandlerMethod {
 		if (ObjectUtils.isEmpty(getMethodParameters())) {
 			return EMPTY_ARGS;
 		}
+		//方法的参数信息数组
 		MethodParameter[] parameters = getMethodParameters();
+		// 解析后的参数结果数组
 		Object[] args = new Object[parameters.length];
 		for (int i = 0; i < parameters.length; i++) {
+		 // 获得当前遍历的 MethodParameter 对象，并设置 parameterNameDiscoverer 到其中
 			MethodParameter parameter = parameters[i];
 			parameter.initParameterNameDiscovery(this.parameterNameDiscoverer);
+			//   先从 providedArgs 中获得参数。如果获得到，则进入下一个参数的解析
 			args[i] = findProvidedArgument(parameter, providedArgs);
 			if (args[i] != null) {
 				continue;
 			}
+			//     // <2> 判断 argumentResolvers 是否支持当前的参数解析
 			if (!this.resolvers.supportsParameter(parameter)) {
 				throw new IllegalStateException(formatArgumentError(parameter, "No suitable resolver"));
 			}
 			try {
+				// // 执行解析。解析成功后，则进入下一个参数的解析
 				args[i] = this.resolvers.resolveArgument(parameter, mavContainer, request, this.dataBinderFactory);
 			}
 			catch (Exception ex) {
@@ -186,6 +192,7 @@ public class InvocableHandlerMethod extends HandlerMethod {
 	protected Object doInvoke(Object... args) throws Exception {
 		ReflectionUtils.makeAccessible(getBridgedMethod());
 		try {
+			//执行调用 桥接方法
 			return getBridgedMethod().invoke(getBean(), args);
 		}
 		catch (IllegalArgumentException ex) {

@@ -59,6 +59,7 @@ public abstract class AbstractDispatcherServletInitializer extends AbstractConte
 
 	@Override
 	public void onStartup(ServletContext servletContext) throws ServletException {
+		//调用父类的逻辑
 		super.onStartup(servletContext);
 		registerDispatcherServlet(servletContext);
 	}
@@ -94,7 +95,7 @@ public abstract class AbstractDispatcherServletInitializer extends AbstractConte
 		registration.setLoadOnStartup(1);
 		registration.addMapping(getServletMappings());
 		registration.setAsyncSupported(isAsyncSupported());
-
+//注册过滤器
 		Filter[] filters = getServletFilters();
 		if (!ObjectUtils.isEmpty(filters)) {
 			for (Filter filter : filters) {

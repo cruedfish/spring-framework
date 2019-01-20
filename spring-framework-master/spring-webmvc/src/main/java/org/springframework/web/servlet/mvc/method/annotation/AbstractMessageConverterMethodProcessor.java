@@ -180,7 +180,9 @@ public abstract class AbstractMessageConverterMethodProcessor extends AbstractMe
 	protected <T> void writeWithMessageConverters(@Nullable T value, MethodParameter returnType,
 			ServletServerHttpRequest inputMessage, ServletServerHttpResponse outputMessage)
 			throws IOException, HttpMediaTypeNotAcceptableException, HttpMessageNotWritableException {
-
+//1、获得响应使用的 MediaType 对象。
+//2、获得响应结果和 Media 对象获得对应的 HttpMessageConverter 对象。
+//3、使用 HttpMessageConverter 将响应结果进行转化，写入到响应中。
 		Object body;
 		Class<?> valueType;
 		Type targetType;

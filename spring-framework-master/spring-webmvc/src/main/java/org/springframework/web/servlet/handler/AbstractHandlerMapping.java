@@ -287,10 +287,13 @@ public abstract class AbstractHandlerMapping extends WebApplicationObjectSupport
 	 * @see #extendInterceptors(java.util.List)
 	 * @see #initInterceptors()
 	 */
+	//ApplicationObjectSupport中的setApplicationContext会调用，其实就是
 	@Override
 	protected void initApplicationContext() throws BeansException {
 		extendInterceptors(this.interceptors);
+		//  // <2> 扫描已注册的 MappedInterceptor 的 Bean 们，添加到 mappedInterceptors 中
 		detectMappedInterceptors(this.adaptedInterceptors);
+		//initInterceptors() 方法，将 interceptors 初始化成 HandlerInterceptor 类型，添加到 mappedInterceptors
 		initInterceptors();
 	}
 
@@ -313,6 +316,7 @@ public abstract class AbstractHandlerMapping extends WebApplicationObjectSupport
 	 * from the current context and its ancestors. Subclasses can override and refine this policy.
 	 * @param mappedInterceptors an empty list to add {@link MappedInterceptor} instances to
 	 */
+	//从beanFactory中找寻类型为MappedInterceptor的类
 	protected void detectMappedInterceptors(List<HandlerInterceptor> mappedInterceptors) {
 		mappedInterceptors.addAll(
 				BeanFactoryUtils.beansOfTypeIncludingAncestors(
@@ -398,8 +402,10 @@ public abstract class AbstractHandlerMapping extends WebApplicationObjectSupport
 	@Override
 	@Nullable
 	public final HandlerExecutionChain getHandler(HttpServletRequest request) throws Exception {
+		//// <1> 获得处理器。该方法是抽象方法，由子类实现
 		//取到的是对应的HandlerMethod对象，里面可以定义到bean和对应的方法
 		Object handler = getHandlerInternal(request);
+		//获得默认处理器
 		if (handler == null) {
 			handler = getDefaultHandler();
 		}

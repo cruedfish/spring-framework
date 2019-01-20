@@ -116,7 +116,7 @@ public class HandlerMethodArgumentResolverComposite implements HandlerMethodArgu
 	@Nullable
 	public Object resolveArgument(MethodParameter parameter, @Nullable ModelAndViewContainer mavContainer,
 			NativeWebRequest webRequest, @Nullable WebDataBinderFactory binderFactory) throws Exception {
-
+     //获取对应的ArgumentResolver
 		HandlerMethodArgumentResolver resolver = getArgumentResolver(parameter);
 		if (resolver == null) {
 			throw new IllegalArgumentException(

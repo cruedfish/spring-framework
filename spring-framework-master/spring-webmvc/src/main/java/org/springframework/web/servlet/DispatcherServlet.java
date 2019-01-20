@@ -159,7 +159,7 @@ import org.springframework.web.util.WebUtils;
  * @see org.springframework.web.context.ContextLoaderListener
  */
 @SuppressWarnings("serial")
-public class DispatcherServlet extends FrameworkServlet {
+public class DispatcherServlet extends FramewokServlet {
 
 	/** Well-known name for the MultipartResolver object in the bean factory for this namespace. */
 	public static final String MULTIPART_RESOLVER_BEAN_NAME = "multipartResolver";
@@ -498,14 +498,20 @@ public class DispatcherServlet extends FrameworkServlet {
 	 * Initialize the strategy objects that this servlet uses.
 	 * <p>May be overridden in subclasses in order to initialize further strategy objects.
 	 */
+	//各种组件的装载
 	protected void initStrategies(ApplicationContext context) {
+		//文件上传请求，MultipartResolver 会将 HttpServletRequest 封装成 MultipartHttpServletRequest ，这样从 MultipartHttpServletRequest 中获得上传的文件
 		initMultipartResolver(context);
 		initLocaleResolver(context);
 		initThemeResolver(context);
+		//org.springframework.web.servlet.HandlerMapping ，处理器匹配接口，根据请求( handler )获得其的处理器( handler )和拦截器们( HandlerInterceptor 数组
 		initHandlerMappings(context);
+		//处理器接口
 		initHandlerAdapters(context);
+		//处理器异常接口
 		initHandlerExceptionResolvers(context);
 		initRequestToViewNameTranslator(context);
+		//org.springframework.web.servlet.ViewResolver ，实体解析器接口，根据视图名和国际化，获得最终的视图 View 对象
 		initViewResolvers(context);
 		initFlashMapManager(context);
 	}
@@ -589,6 +595,8 @@ public class DispatcherServlet extends FrameworkServlet {
 	 * <p>If no HandlerMapping beans are defined in the BeanFactory for this namespace,
 	 * we default to BeanNameUrlHandlerMapping.
 	 */
+	//初始化HandlerMapping
+
 	//只是把所有的handlermapping bean放到这个集合里面来
 	private void initHandlerMappings(ApplicationContext context) {
 		//在容器初始化的时候
@@ -926,6 +934,7 @@ public class DispatcherServlet extends FrameworkServlet {
 		}
 
 		// Make framework objects available to handlers and view objects.
+		//设置spring request常用的请求属性
 		request.setAttribute(WEB_APPLICATION_CONTEXT_ATTRIBUTE, getWebApplicationContext());
 		request.setAttribute(LOCALE_RESOLVER_ATTRIBUTE, this.localeResolver);
 		request.setAttribute(THEME_RESOLVER_ATTRIBUTE, this.themeResolver);
@@ -941,6 +950,7 @@ public class DispatcherServlet extends FrameworkServlet {
 		}
 
 		try {
+			//dodipatch 执行请求的分发
 			doDispatch(request, response);
 		}
 		finally {
@@ -1021,7 +1031,8 @@ public class DispatcherServlet extends FrameworkServlet {
 					return;
 				}
 
-				// Determine handler adapter for the current request.
+				// Determine handler adapter for the current request
+				// 获取请求对应的HandlerAdapter.
 				HandlerAdapter ha = getHandlerAdapter(mappedHandler.getHandler());
 
 				// Process last-modified header, if supported by the handler.
@@ -1033,12 +1044,14 @@ public class DispatcherServlet extends FrameworkServlet {
 						return;
 					}
 				}
+               //前置拦截器
                 //拦截器的preHandle方法调用
 				if (!mappedHandler.applyPreHandle(processedRequest, response)) {
 					return;
 				}
 
 				// Actually invoke the handler.
+				//真正调用hanler出的方法
 				//真正的调用handle方法去出来请求
 				mv = ha.handle(processedRequest, response, mappedHandler.getHandler());
 
@@ -1047,6 +1060,7 @@ public class DispatcherServlet extends FrameworkServlet {
 				}
 
 				applyDefaultViewName(processedRequest, mv);
+				//后置拦截器
 				mappedHandler.applyPostHandle(processedRequest, response, mv);
 			}
 			catch (Exception ex) {
